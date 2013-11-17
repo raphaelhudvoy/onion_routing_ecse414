@@ -1,0 +1,13 @@
+package graphManagement;
+
+import java.util.regex.*;
+
+public class Test {
+
+	public static void main (String [] args){
+		GraphOverlord gl = new GraphOverlord (System.getProperty("user.dir") + "/dat/trial.brite");//+ "/../../dat/trial.brite");
+		System.out.println("done");
+		System.out.println(gl.getRandomRouter());
+	}
+	
+}
