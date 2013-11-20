@@ -29,7 +29,8 @@ public class GraphOverlord {
 		int index = 0;
 		
 		Edge edge = null;
-	
+		Edge edge1 = null, edge2 = null;
+		
 		Scanner sc = null;
 		
 		Pattern p = null;
@@ -74,11 +75,7 @@ public class GraphOverlord {
 				if (values.length == 7 && index < this.totalNumNodes){
 					//The first node to be created doesn't necessarily had ID = 0
 					if (index == 0) offset = Integer.parseInt(values[0]);
-
-
 					allNodes [index] = new Node (Integer.parseInt(values[0]), Integer.parseInt(values[1]), Integer.parseInt(values[2]), Integer.parseInt(values[3]), Integer.parseInt(values[4]), Integer.parseInt(values[5]), values[6]);
-
-						
 				}
 				else {
 					System.err.println("Node value misisng");
@@ -115,15 +112,23 @@ public class GraphOverlord {
 				values = temp.split("\t");
 				
 				if (values.length >= 9) {
-					edge = new Edge (Integer.parseInt(values[0]), Integer.parseInt(values[1]), Integer.parseInt(values[2]), Double.parseDouble(values[3]), Double.parseDouble(values[4]), Double.parseDouble(values[5]), Integer.parseInt(values[6]), Integer.parseInt(values[7]), values[8]);					
-				
-					 allNodes[edge.getFrom() - offset].addEdge(edge);
-					 allNodes[edge.getTo() - offset].addEdge(edge);
+					edge1 = new Edge (Integer.parseInt(values[0]), Integer.parseInt(values[1]), Integer.parseInt(values[2]), 
+							Double.parseDouble(values[3]), Double.parseDouble(values[4]), Double.parseDouble(values[5]), 
+							Integer.parseInt(values[6]), Integer.parseInt(values[7]), values[8], 
+							getNode(Integer.parseInt(values[1])), getNode(Integer.parseInt(values[2])));					
+					edge2 = new Edge (Integer.parseInt(values[0]), Integer.parseInt(values[2]), Integer.parseInt(values[1]), 
+							Double.parseDouble(values[3]), Double.parseDouble(values[4]), Double.parseDouble(values[5]), 
+							Integer.parseInt(values[6]), Integer.parseInt(values[7]), values[8], 
+							getNode(Integer.parseInt(values[2])), getNode(Integer.parseInt(values[1])));					
+
+					allNodes[edge1.getSourceID() - offset].addEdge(edge1);
+					allNodes[edge2.getSourceID() - offset].addEdge(edge2);					
 				}
 				else {
 					System.err.println("Edge value is missing");
 					return false;
 				}
+
 			}		
 	
 		} catch (Exception e){
@@ -147,6 +152,30 @@ public class GraphOverlord {
 	  return allNodes[0];
 	}
 	
+	//Retrieves all nodes belonging in the same AS as source
+	public LinkedList<Node> getAS (Node source){	
+		LinkedList<Node> as = new LinkedList<Node>();
+		int AsId = source.getASid();
+		
+		for (int i = 0 ; i < allNodes.length ; i++){
+			if (allNodes[i].getASid() == AsId){
+				as.add(allNodes[i]);
+			}
+		}		
+		return as;
+	}
+	
+	//Retrieves all boundary nodes
+	public LinkedList<Node> getBoundaryNodes (){
+		LinkedList<Node> boundary = new LinkedList<Node>();
+		for (int i = 0 ; i < allNodes.length ; i++){
+			if (allNodes[i].getType().equals("RT_BORDER")){
+				boundary.add(allNodes[i]);
+			}
+		}
+		return boundary;
+	}
+	
 	//Retrieves a router which is not a border
 	public Node getRandomRouter (){
 		double ran; 
@@ -158,5 +187,25 @@ public class GraphOverlord {
 		 
 		return allNodes[nodeLocation]; 
 	}
+	
+	public void print (){
+		System.out.println("Printing the graph...");
+		for (int i = 0 ; i < allNodes.length ; i ++){
+			System.out.println(allNodes[i]);
+		}
+	}
+	
+	//Returns all border nodes for a given AS id
+	public LinkedList<Node> getBorders(int ASid){
 		
+		LinkedList<Node> borders = new LinkedList<Node>();
+		for (int i = 0 ; i < allNodes.length ; i++){
+			if (allNodes[i].getType().equals("RT_BORDER") && allNodes[i].getASid() == ASid){
+				borders.add(allNodes[i]);
+			}
+		}
+		return borders;
+		
+	}
+	
 }

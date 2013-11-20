@@ -8,7 +8,6 @@ public class Node {
 	private int nodeId, xpos, ypos, inDegree, outDegree, ASid;
 	private String type;
 	private LinkedList<Edge> edges;
-	private int distance;
 
 	public Node (int nodeId, int xpos, int ypos, int inDegree, int outDegree, int ASid, String type){
 		this.nodeId = nodeId;
@@ -20,7 +19,6 @@ public class Node {
 		this.type = type;
 
 		this.edges = new LinkedList<Edge>();
-		this.distance = -1;
 	}
 
 	public void addEdge (Edge e){
@@ -61,15 +59,24 @@ public class Node {
 
 	public String toString () {
 		return "NODE_ID: " + nodeId + " XPOS: " + xpos + " YPOS: " + ypos + " IN_DEGREE: " + inDegree + 
-		  " OUT_DEGREE: " + outDegree + " AS_ID: " + ASid + " TYPE: " + type;
+		  " OUT_DEGREE: " + outDegree + "Num edges: " + edges.size() + " AS_ID: " + ASid + " TYPE: " + type;
 	}
 	
-	public int getDistance (){
-		return distance;
+	public boolean equals (Object other){
+		return this == other;
+		//return this.getNodeId() == ((Node)other).getNodeId();
 	}
 	
-	public void setDistance(int distance){
-		this.distance = distance;
+	public int hasCode(){
+		return nodeId;
 	}
+	
+//	public int getDistance (){
+//		return distance;
+//	}
+	
+//	public void setDistance(int distance){
+//		this.distance = distance;
+//	}
 	
 }
